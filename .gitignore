@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+
+# Secrets
+.env
+
+# Logs
+logs/
+
+# PowerBI temp
+*.pbix.autosave
+
+# Virtual environments
+venv/
