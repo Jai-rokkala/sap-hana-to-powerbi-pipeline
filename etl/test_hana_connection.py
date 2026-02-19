@@ -22,5 +22,5 @@ try:
     conn.close()
 
 except dbapi.Error as e:
-    print ("❌ Connection failed")
+    print ("Connection failed")
     print(e)

@@ -1,9 +1,8 @@
-import pandas as pd
+import pandas as pd 
+import psycopg2
 from dotenv import load_dotenv
 import os
 import logging
-import psycopg2
-from datetime import datetime
 
 #loading .env
 load_dotenv("config/.env")
@@ -22,6 +21,9 @@ def get_last_loaded_time(conn):
     return result
 
 try:
+    # Load simulated SAP data
+    df = pd.read_csv("data/sap_oinv.csv", parse_dates=["update_date"])
+
     conn = psycopg2.connect(
         host=os.getenv("PG_HOST"),
         port=os.getenv("PG_PORT"),
@@ -29,23 +31,16 @@ try:
         password=os.getenv("PG_PASSWORD"),
         dbname=os.getenv("PG_DB")
     )
+
     last_loaded = get_last_loaded_time(conn)
 
     print(f"Last loaded timestamp: {last_loaded}")
 
-    # Simulated NEW SAP data
-    now = datetime.now()
+    # Incremental filter
+    if last_loaded:
+        df = df[df["update_date"] > last_loaded]
 
-    data = {
-        "doc_entry": [20, 21],
-        "doc_num": [2020, 2021],
-        "card_code": ["C020", "C021"],
-        "doc_date": ["2026-02-01", "2026-02-02"],
-        "doc_total": [4000, 5000],
-        "update_date": [now, now]
-    }
-
-    df = pd.DataFrame(data)
+    print(f"Rows to load: {len(df)}")
 
     cursor = conn.cursor()
 
@@ -61,12 +56,12 @@ try:
 
     conn.commit()
 
-    logging.info(f"Incremental load: {len(df)} rows")
-    print("Incremental ETL completed!")
+    logging.info(f"SAP simulated load: {len(df)} rows")
+    print("Simulated SAP load completed!")
 
     cursor.close()
     conn.close()
 
 except Exception as e:
-    logging.error(f"Incremental ETL failed: {e}")
-    print("Incremental ETL failed")
+    logging.error(f"SAP simulated ETL failed: {e}")
+    print("ETL failed")

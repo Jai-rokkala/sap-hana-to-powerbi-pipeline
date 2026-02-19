@@ -15,7 +15,7 @@ logging.basicConfig(
     )
 
 try:
-    # 🔹 Simulated SAP data
+    # Simulated SAP data
     data = {
         "doc_entry": [10, 11, 12],
         "doc_num": [1010, 1011, 1012],

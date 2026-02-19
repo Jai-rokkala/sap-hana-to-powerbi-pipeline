@@ -26,7 +26,7 @@ data = (2, 1002, "C002", "2026-01-02", 7500)
 cursor.execute(query, data)
 conn.commit()
 
-print("✅ Data inserted successfully!")
+print("Data inserted successfully!")
 
 cursor.close()
 conn.close()
